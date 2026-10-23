@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
-const MODEL_URL = "uploads/1985_yugo_gv.glb"; // REPLACE_WITH_GLB_URL for production
+const MODEL_URL = "1985_yugo_gv.glb"; // REPLACE_WITH_GLB_URL for production
 const DRACO_PATH = 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/';
 const PAINT_MATERIAL = null; // optional: exact material name of the body paint
 const MODEL_LENGTH = 4;      // scene units the car is normalised to
