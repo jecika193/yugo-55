@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yugo 55 — Zastava, Kragujevac</title>
+<meta name="description" content="A tribute to the Zastava Yugo 55, built in Kragujevac from 1980 to 2008.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap">
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/" } }
+</script>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+:root {
+  --bg: #0A0A0B;
+  --ink: #EDEAE4;
+  --muted: #8A877F;
+  --accent: #A3231F;
+  --rule: rgba(255,255,255,0.08);
+  --rule-strong: rgba(255,255,255,0.16);
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --ease: cubic-bezier(0.22,1,0.36,1);
+  --gutter-hero: clamp(20px,4vw,56px);
+  --gutter: clamp(20px,5vw,48px);
+}
+html, body { margin: 0; background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; }
+body { font-family: var(--serif); }
+a { color: var(--ink); text-decoration-color: rgba(237,234,228,0.3); text-underline-offset: 4px; }
+a:hover { color: var(--ink); text-decoration-color: var(--accent); }
+::selection { background: rgba(163,35,31,0.45); color: var(--ink); }
+:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+@keyframes yugoCue { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(260%); } }
+
+/* Shared type */
+.label, .caption, .eyebrow {
+  margin: 0; font-family: var(--display); font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+}
+.label { font-size: 13px; }
+.eyebrow { font-size: 11px; }
+.caption { font-size: 12px; }
+.section-title { margin: 0; font-family: var(--display); font-weight: 300; font-size: clamp(36px,4.4vw,56px); line-height: 1; color: var(--ink); text-wrap: balance; }
+.body-lg { margin: 0; font-size: 19px; line-height: 1.65; color: var(--ink); text-wrap: pretty; }
+.body-md { margin: 0; font-size: 17px; line-height: 1.6; color: var(--muted); text-wrap: pretty; }
+.is-muted { color: var(--muted); }
+.item-title { margin: 0; font-family: var(--display); font-weight: 500; font-size: 15px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); }
+.verify-flag { font-family: var(--display); font-weight: 500; font-size: 10px; letter-spacing: 0.2em; color: var(--accent); border: 1px solid rgba(163,35,31,0.5); padding: 2px 6px; }
+.hide-verify .verify-flag { display: none; }
+.rule-accent { display: block; width: 24px; height: 1px; background: var(--accent); }
+
+/* Hero */
+.hero { position: relative; height: 100svh; min-height: 520px; overflow: hidden; }
+.hero-canvas { position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse 60% 55% at 50% 60%, #1B1B1B 0%, #111112 38%, var(--bg) 72%); }
+.hero-title-wrap { position: absolute; z-index: 2; top: clamp(24px,5vh,56px); left: var(--gutter-hero); right: var(--gutter-hero); pointer-events: none; display: flex; flex-direction: column; gap: clamp(4px,1.2vh,14px); }
+.hero-title { margin: 0; font-family: var(--display); font-weight: 300; font-size: clamp(64px,14vw,220px); line-height: 0.82; letter-spacing: -0.01em; color: var(--ink); opacity: 0.92; }
+
+.hero-presets { position: absolute; z-index: 3; left: var(--gutter-hero); bottom: clamp(24px,5vh,48px); display: flex; flex-direction: column; flex-wrap: wrap; gap: 2px; }
+.preset-button { appearance: none; background: transparent; border: 0; padding: 6px 0; min-height: 32px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 500; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); transition: color 300ms ease; }
+.preset-button:hover, .preset-button[aria-pressed="true"] { color: var(--ink); }
+.preset-mark { display: block; height: 1px; width: 0; background: var(--accent); transition: width 400ms var(--ease); }
+.preset-button[aria-pressed="true"] .preset-mark { width: 20px; }
+
+.hero-paint { position: absolute; z-index: 3; right: var(--gutter-hero); bottom: clamp(24px,5vh,48px); display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.paint-name { color: var(--ink); }
+.paint-swatches { display: flex; gap: 6px; }
+.paint-swatch { appearance: none; background: transparent; border: 1px solid var(--rule); border-radius: 50%; width: 32px; height: 32px; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 300ms ease; }
+.paint-swatch:hover { border-color: rgba(237,234,228,0.5); }
+.paint-swatch[aria-checked="true"] { border-color: var(--ink); }
+.paint-swatch span { display: block; width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14); }
+
+.scroll-cue { position: absolute; z-index: 3; left: 50%; bottom: clamp(20px,4vh,40px); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 12px; pointer-events: none; }
+.scroll-cue-track { position: relative; display: block; width: 1px; height: 44px; background: var(--rule); overflow: hidden; }
+.scroll-cue-thumb { position: absolute; left: 0; top: 0; width: 1px; height: 16px; background: var(--ink); animation: yugoCue 2.4s var(--ease) infinite; }
+.skip-link { pointer-events: auto; font-family: var(--display); font-weight: 500; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 4px 8px; }
+.skip-link:hover { color: var(--ink); }
+.skip-link-mobile { position: absolute; z-index: 3; top: clamp(20px,5vh,52px); right: clamp(12px,4vw,56px); display: none; align-items: center; min-height: 44px; padding: 0 8px; }
+
+.loader, .load-error { position: absolute; z-index: 4; inset: 0; display: flex; align-items: center; justify-content: center; }
+.loader { pointer-events: none; }
+.loader-inner { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.loader-track { position: relative; display: block; width: 160px; height: 1px; background: var(--rule); }
+.loader-bar { position: absolute; left: 0; top: 0; height: 1px; width: 0; background: var(--ink); transition: width 200ms linear; }
+.loader-pct { font-family: var(--display); font-weight: 500; font-size: 11px; letter-spacing: 0.2em; color: var(--muted); }
+.load-error { padding: 24px; }
+.load-error-inner { max-width: 360px; text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.load-error-title { margin: 0; font-family: var(--display); font-weight: 500; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); }
+.load-error-body { margin: 0; font-size: 16px; line-height: 1.55; color: var(--muted); }
+[hidden] { display: none !important; }
+
+/* Sections */
+.section { padding: max(20vh,120px) var(--gutter) 0; }
+.container { max-width: 1100px; margin: 0 auto; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,420px),1fr)); gap: clamp(32px,6vw,96px); align-items: start; }
+.stack-24 { display: flex; flex-direction: column; gap: 24px; }
+.stack-20 { display: flex; flex-direction: column; gap: 20px; }
+
+/* Reveal: hidden only when JS is running */
+.js [data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity 900ms var(--ease), transform 900ms var(--ease); }
+.js [data-reveal="late"] { transition-delay: 120ms; }
+.js [data-reveal].is-revealed { opacity: 1; transform: none; }
+
+/* 01 Origin */
+.origin-label { margin-bottom: 20px; }
+.origin-year { margin: 0; font-family: var(--display); font-weight: 300; font-size: clamp(140px,22vw,300px); line-height: 0.8; letter-spacing: -0.02em; color: var(--accent); }
+.origin-year-wrap .caption { margin-top: 20px; }
+.origin-copy { padding-top: clamp(0px,4vw,40px); }
+
+/* 02 Specifications */
+.specs-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: clamp(32px,6vw,96px); align-items: start; }
+.specs-intro .body-md { font-size: 17px; max-width: 34ch; }
+.spec-sheet { min-width: 0; border-top: 1px solid var(--rule-strong); }
+.spec-sheet-head { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.spec-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.4fr); gap: 6px 16px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+.spec-value-wrap { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.spec-value { font-size: 20px; line-height: 1.35; color: var(--ink); }
+
+/* 03 Story */
+.story .grid-2 { gap: clamp(40px,6vw,96px); }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; display: flex; flex-direction: column; gap: clamp(36px,5vh,56px); border-left: 1px solid var(--rule); }
+.timeline-entry { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.timeline-dot { position: absolute; left: -32px; top: 14px; width: 7px; height: 7px; border-radius: 50%; background: var(--bg); border: 1px solid var(--accent); }
+.timeline-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.timeline-year { font-family: var(--display); font-weight: 300; font-size: 40px; line-height: 1; color: var(--accent); }
+
+/* 04 Legacy */
+.legacy-stack { display: flex; flex-direction: column; gap: clamp(40px,6vw,72px); }
+.pull-quote { margin: 0; max-width: 22ch; display: flex; flex-direction: column; gap: 28px; }
+.pull-quote blockquote { margin: 0; font-style: italic; font-size: clamp(34px,4.6vw,60px); line-height: 1.15; color: var(--ink); text-wrap: balance; }
+.pull-quote figcaption { display: flex; align-items: center; gap: 14px; }
+.legacy-copy { margin: 0 0 0 auto; max-width: 520px; color: var(--muted); }
+
+/* 05 Colophon */
+.colophon { padding-bottom: max(14vh,96px); }
+.colophon-stack { display: flex; flex-direction: column; gap: clamp(40px,6vw,64px); border-top: 1px solid var(--rule); padding-top: clamp(40px,6vw,64px); }
+.colophon .section-title { font-size: clamp(40px,5vw,64px); }
+.colophon-head { display: flex; flex-direction: column; gap: 16px; }
+.colophon-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: clamp(28px,4vw,48px); }
+.colophon-item { display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.colophon-num { font-family: var(--display); font-weight: 500; font-size: 12px; letter-spacing: 0.2em; color: var(--accent); }
+.contact-link { align-self: flex-start; display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--accent); text-decoration: none; font-family: var(--display); font-weight: 300; font-size: clamp(28px,3.2vw,40px); line-height: 1; color: var(--ink); }
+.js .contact-link[data-reveal] { transition: opacity 900ms var(--ease), transform 900ms var(--ease), border-color 300ms ease; }
+.contact-link:hover { border-color: var(--ink); }
+
+.footer { padding: 24px var(--gutter); border-top: 1px solid var(--rule); }
+.footer p { max-width: 1100px; margin: 0 auto; }
+
+/* Breakpoints: lg ≥1024, md 720–1023, sm 480–719, xs <480 */
+@media (min-width: 1024px) {
+  .specs-grid { grid-template-columns: minmax(0,1fr) minmax(0,2fr); }
+}
+@media (max-width: 719px) {
+  .hero-presets { flex-direction: row; gap: 4px 24px; right: var(--gutter-hero); }
+  .preset-mark { display: none; }
+  .preset-button[aria-pressed="true"] .preset-mark { display: block; width: 10px; }
+  .hero-paint { right: auto; left: var(--gutter-hero); bottom: calc(clamp(24px,5vh,48px) + 56px); align-items: flex-start; }
+  .scroll-cue { display: none; }
+  .skip-link-mobile { display: flex; }
+}
+@media (max-width: 479px) {
+  .hero-presets { gap: 4px 18px; }
+  .spec-row { grid-template-columns: minmax(0,1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue-thumb { animation: none; }
+  .js [data-reveal] { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="hero" id="hero" data-screen-label="Hero">
+  <div id="yugo-canvas" class="hero-canvas"></div>
+
+  <div class="hero-title-wrap">
+    <p class="label">Zastava · Kragujevac</p>
+    <h1 class="hero-title">YUGO 55</h1>
+  </div>
+
+  <nav class="hero-presets" aria-label="Camera views">
+    <button class="preset-button" type="button" data-preset="front" aria-pressed="false"><span class="preset-mark"></span><span>Front</span></button>
+    <button class="preset-button" type="button" data-preset="side" aria-pressed="false"><span class="preset-mark"></span><span>Side</span></button>
+    <button class="preset-button" type="button" data-preset="rear" aria-pressed="false"><span class="preset-mark"></span><span>Rear</span></button>
+    <button class="preset-button" type="button" data-preset="detail" aria-pressed="false"><span class="preset-mark"></span><span>Detail</span></button>
+  </nav>
+
+  <div class="hero-paint" role="radiogroup" aria-label="Paint colour">
+    <span class="eyebrow">Paint · <span class="paint-name" id="paint-name">Factory red</span></span>
+    <div class="paint-swatches">
+      <button class="paint-swatch" type="button" role="radio" aria-checked="true" aria-label="Factory red" title="Factory red" data-hex="#C8102E"><span style="background:#C8102E"></span></button>
+      <button class="paint-swatch" type="button" role="radio" aria-checked="false" aria-label="Ivory" title="Ivory" data-hex="#E9E5DA"><span style="background:#E9E5DA"></span></button>
+      <button class="paint-swatch" type="button" role="radio" aria-checked="false" aria-label="Night blue" title="Night blue" data-hex="#1E2A44"><span style="background:#1E2A44"></span></button>
+      <button class="paint-swatch" type="button" role="radio" aria-checked="false" aria-label="Forest green" title="Forest green" data-hex="#2E4636"><span style="background:#2E4636"></span></button>
+      <button class="paint-swatch" type="button" role="radio" aria-checked="false" aria-label="Graphite" title="Graphite" data-hex="#3A3B3E"><span style="background:#3A3B3E"></span></button>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <span class="eyebrow">Scroll to explore</span>
+    <span class="scroll-cue-track"><span class="scroll-cue-thumb"></span></span>
+    <a class="skip-link" href="#origin">Skip ↓</a>
+  </div>
+
+  <a class="skip-link skip-link-mobile" href="#origin">Skip ↓</a>
+
+  <div class="loader" id="loader" role="status">
+    <div class="loader-inner">
+      <span class="loader-track"><span class="loader-bar" id="loader-bar"></span></span>
+      <span class="loader-pct" id="loader-pct">0%</span>
+    </div>
+  </div>
+  <div class="load-error" id="load-error" role="alert" hidden>
+    <div class="load-error-inner">
+      <span class="rule-accent"></span>
+      <p class="load-error-title">The car is resting</p>
+      <p class="load-error-body">The 3D model couldn't be loaded on this device. The rest of the exhibit continues below.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="origin" class="section origin" data-screen-label="Origin">
+  <div class="container grid-2">
+    <div class="origin-year-wrap" data-reveal>
+      <p class="label origin-label">01 — Origin</p>
+      <p class="origin-year">1980</p>
+      <p class="caption">Production begins in Kragujevac</p>
+    </div>
+    <div class="origin-copy stack-24" data-reveal="late">
+      <h2 class="section-title">A small car from a city of engineers</h2>
+      <p class="body-lg">The Yugo was built by Zavodi Crvena Zastava in Kragujevac, a city in central Serbia whose works had been casting cannon since the 1850s. By the time of the Yugo, Zastava had been building Fiat designs under licence for more than two decades.</p>
+      <p class="body-lg is-muted">The new car took the mechanical basis of the Fiat 127 and gave it a squarer, more upright three-door body. The 55, named for its output in horsepower, became the version most people outside Yugoslavia would come to know.</p>
+    </div>
+  </div>
+</section>
+
+<section id="specifications" class="section specs" data-screen-label="Specifications">
+  <div class="container specs-grid">
+    <div class="specs-intro stack-20" data-reveal>
+      <p class="label">02 — Specifications</p>
+      <h2 class="section-title">Technical data</h2>
+      <p class="body-md">Yugo 55, three-door saloon. Figures are shown for reference and are to be checked against factory literature.</p>
+    </div>
+    <div class="spec-sheet" data-reveal="late">
+      <div class="spec-sheet-head eyebrow"><span>Zastava · Model 55</span><span>Sheet 01</span></div>
+      <div class="spec-row"><span class="label">Engine</span><span class="spec-value-wrap"><span class="spec-value">Inline four, overhead cam, front-mounted</span><span class="verify-flag">VERIFY</span></span></div>
+      <div class="spec-row"><span class="label">Displacement</span><span class="spec-value-wrap"><span class="spec-value">1,116 cc</span><span class="verify-flag">VERIFY</span></span></div>
+      <div class="spec-row"><span class="label">Power</span><span class="spec-value-wrap"><span class="spec-value">55 PS</span><span class="verify-flag">VERIFY</span></span></div>
+      <div class="spec-row"><span class="label">Top speed</span><span class="spec-value-wrap"><span class="spec-value">140 km/h</span><span class="verify-flag">VERIFY</span></span></div>
+      <div class="spec-row"><span class="label">Weight</span><span class="spec-value-wrap"><span class="spec-value">825 kg</span><span class="verify-flag">VERIFY</span></span></div>
+      <div class="spec-row"><span class="label">Production</span><span class="spec-value-wrap"><span class="spec-value">1980 – 2008</span><span class="verify-flag">VERIFY</span></span></div>
+      <div class="spec-row"><span class="label">Body style</span><span class="spec-value-wrap"><span class="spec-value">Three-door hatchback</span><span class="verify-flag">VERIFY</span></span></div>
+    </div>
+  </div>
+</section>
+
+<section id="story" class="section story" data-screen-label="The Story">
+  <div class="container grid-2">
+    <div class="story-copy stack-24" data-reveal>
+      <p class="label">03 — The Story</p>
+      <h2 class="section-title">Across the Atlantic, and home again</h2>
+      <p class="body-lg">In 1985 the Yugo arrived in the United States at $3,990, the least expensive new car on sale there. It was simple, light and easy to work on, and for many buyers it was the first new car they had ever owned.</p>
+      <p class="body-lg is-muted">Abroad, its reputation was hard-won and often unkind, and the jokes outlived its years on the market. At home it was the car of families, students, taxi ranks and first jobs, driven for decades and kept running with patience and care.</p>
+    </div>
+    <ol class="timeline">
+      <li class="timeline-entry" data-reveal>
+        <span class="timeline-dot"></span>
+        <span class="timeline-head"><span class="timeline-year">1980</span><span class="verify-flag">VERIFY</span></span>
+        <h3 class="item-title">The first cars</h3>
+        <p class="body-md">Production begins at Zastava in Kragujevac, on the mechanical basis of the Fiat 127.</p>
+      </li>
+      <li class="timeline-entry" data-reveal>
+        <span class="timeline-dot"></span>
+        <span class="timeline-head"><span class="timeline-year">1985</span><span class="verify-flag">VERIFY</span></span>
+        <h3 class="item-title">Arrival in America</h3>
+        <p class="body-md">The Yugo goes on sale in the United States at $3,990, the lowest price of any new car in the country.</p>
+      </li>
+      <li class="timeline-entry" data-reveal>
+        <span class="timeline-dot"></span>
+        <span class="timeline-head"><span class="timeline-year">1989</span><span class="verify-flag">VERIFY</span></span>
+        <h3 class="item-title">The importer falters</h3>
+        <p class="body-md">The American importer runs into financial trouble, and sales slow as the decade closes.</p>
+      </li>
+      <li class="timeline-entry" data-reveal>
+        <span class="timeline-dot"></span>
+        <span class="timeline-head"><span class="timeline-year">1992</span><span class="verify-flag">VERIFY</span></span>
+        <h3 class="item-title">Exports end</h3>
+        <p class="body-md">International sanctions bring exports to a halt. The car carries on for its home market.</p>
+      </li>
+      <li class="timeline-entry" data-reveal>
+        <span class="timeline-dot"></span>
+        <span class="timeline-head"><span class="timeline-year">2008</span><span class="verify-flag">VERIFY</span></span>
+        <h3 class="item-title">The last Yugo</h3>
+        <p class="body-md">The final car leaves the Kragujevac line in November, after close to 800,000 built.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section id="legacy" class="section legacy" data-screen-label="Legacy">
+  <div class="container legacy-stack">
+    <p class="label" data-reveal>04 — Legacy</p>
+    <figure class="pull-quote" data-reveal>
+      <blockquote>“Placeholder quote — a line from someone who owned one, drove one, or built one.”</blockquote>
+      <figcaption class="caption"><span class="rule-accent"></span>Attribution to come</figcaption>
+    </figure>
+    <p class="body-lg legacy-copy" data-reveal>From Ljubljana to Skopje, the Yugo, known at home as the Koral, remains part of family memory: the first car, the car for the coast in August, the car kept going long after newer ones had come and gone. It is remembered less as a product than as a shared piece of everyday life in a country that no longer exists.</p>
+  </div>
+</section>
+
+<section id="colophon" class="section colophon" data-screen-label="Colophon">
+  <div class="container colophon-stack">
+    <div class="colophon-head" data-reveal>
+      <p class="label">05 — Colophon</p>
+      <h2 class="section-title">Built by Jelena Jovanovic</h2>
+    </div>
+    <ul class="colophon-list">
+      <li class="colophon-item" data-reveal>
+        <span class="colophon-num">01</span>
+        <h3 class="item-title">3D lighting</h3>
+        <p class="body-md">A custom studio of emissive panels, baked into an environment map, lays long strip reflections across the flat panels as the car turns.</p>
+      </li>
+      <li class="colophon-item" data-reveal>
+        <span class="colophon-num">02</span>
+        <h3 class="item-title">Interaction design</h3>
+        <p class="body-md">The wheel moves the camera until it has fully pulled back, then hands scrolling back to the page. Presets carry the view on slow, eased arcs.</p>
+      </li>
+      <li class="colophon-item" data-reveal>
+        <span class="colophon-num">03</span>
+        <h3 class="item-title">Webflow build</h3>
+        <p class="body-md">Semantic sections and collection-driven content, structured to map one-to-one onto a Webflow project.</p>
+      </li>
+    </ul>
+    <a class="contact-link" href="mailto:hello@example.com" data-reveal>Get in touch <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p class="eyebrow">© 2026 Jelena Jovanovic · A tribute to the Zastava Yugo 55 · Not affiliated with Zastava</p>
+</footer>
+
+</div>
+
+<script type="module">
+// Page settings (were editable props in the design)
+const ORIGINAL_PAINT = '#C8102E'; // swatch that means "keep the model's own paint"
+const FLIP_FRONT = false;         // set true if the camera presets face the wrong end of the car
+const SHOW_VERIFY = true;         // set false to hide the VERIFY flags once figures are checked
+
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!SHOW_VERIFY) document.documentElement.classList.add('hide-verify');
+
+// Scroll reveal
+const reveal = el => el.classList.add('is-revealed');
+const revealEls = document.querySelectorAll('[data-reveal]');
+if (reduced || !('IntersectionObserver' in window)) revealEls.forEach(reveal);
+else {
+  const io = new IntersectionObserver(entries => entries.forEach(en => {
+    if (en.isIntersecting) { reveal(en.target); io.unobserve(en.target); }
+  }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+  revealEls.forEach(el => io.observe(el));
+}
+
+// Skip links
+document.querySelectorAll('.skip-link').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  const el = document.getElementById('origin');
+  window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: reduced ? 'auto' : 'smooth' });
+}));
+
+// Hero UI
+const loader = document.getElementById('loader');
+const loaderBar = document.getElementById('loader-bar');
+const loaderPct = document.getElementById('loader-pct');
+const loadError = document.getElementById('load-error');
+const presetButtons = [...document.querySelectorAll('[data-preset]')];
+const swatches = [...document.querySelectorAll('.paint-swatch')];
+const paintName = document.getElementById('paint-name');
+
+const setProgress = p => {
+  const pct = Math.round(p * 100) + '%';
+  loaderBar.style.width = pct;
+  loaderPct.textContent = pct;
+};
+const fail = e => { console.error('[yugo]', e); loader.hidden = true; loadError.hidden = false; };
+const setActivePreset = name => presetButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.preset === name)));
+const paintFor = hex => (hex.toLowerCase() === ORIGINAL_PAINT.toLowerCase() ? null : hex);
+
+let yugo = null;
+
+swatches.forEach(s => s.addEventListener('click', () => {
+  swatches.forEach(o => o.setAttribute('aria-checked', String(o === s)));
+  paintName.textContent = s.getAttribute('aria-label');
+  yugo?.setPaintColor(paintFor(s.dataset.hex));
+}));
+presetButtons.forEach(b => b.addEventListener('click', () => yugo?.goTo(b.dataset.preset)));
+
+import('./yugo-scene.js')
+  .then(mod => {
+    yugo = mod.mountYugo(document.getElementById('yugo-canvas'), {
+      heroEl: document.getElementById('hero'),
+      frontSign: FLIP_FRONT ? -1 : 1,
+      paintColor: paintFor(swatches.find(s => s.getAttribute('aria-checked') === 'true').dataset.hex),
+      onProgress: setProgress,
+      onLoad: () => { setProgress(1); loader.hidden = true; },
+      onError: fail,
+      onPreset: setActivePreset,
+    });
+  })
+  .catch(fail);
+</script>
+</body>
+</html>
